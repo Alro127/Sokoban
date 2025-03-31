@@ -1,6 +1,6 @@
 import pygame
 import numpy as np
-
+import sys
 import Levels as lv
 from Player import Player
 import Algorithms as agrm
@@ -12,7 +12,11 @@ pygame.init()
 # Kích thước ô vuông
 TILE_SIZE = 64  # Tăng kích thước ô để hiển thị rõ hơn
 
-level_map = np.array([list(row) for row in lv.levels[3]])
+level_index = int(sys.argv[1])  # Level được chọn
+algorithm_name = sys.argv[2]    # Thuật toán được chọn
+
+
+level_map = np.array([list(row) for row in lv.levels[level_index]])
 
 # Xác định kích thước màn hình
 ROWS = len(level_map)
@@ -21,7 +25,7 @@ WIDTH, HEIGHT = COLS * TILE_SIZE, ROWS * TILE_SIZE
 
 # Tạo cửa sổ game
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Sokoban - Level 1")
+pygame.display.set_caption("Sokoban - Level " + str(level_index + 1))
 
 def load_level_images(level_index):
     """Tải hình ảnh của level hiện tại"""
@@ -82,9 +86,11 @@ def reconstruct_path(start_node, goal_node):
 
     return path[::-1]  # Trả về đường đi ngược
 
-
 start_node = Node(level_map)
-goal_node = agrm.BFS(start_node)
+if algorithm_name == "BFS":
+    goal_node = agrm.BFS(start_node)
+else:
+    goal_node = agrm.DFS(start_node)
 
 if goal_node is not None:
 
