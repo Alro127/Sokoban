@@ -12,7 +12,7 @@ pygame.init()
 # Kích thước ô vuông
 TILE_SIZE = 64  # Tăng kích thước ô để hiển thị rõ hơn
 
-level_map = np.array([list(row) for row in lv.levels[3]])
+level_map = np.array([list(row) for row in lv.levels[2]])
 
 # Xác định kích thước màn hình
 ROWS = len(level_map)
