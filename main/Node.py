@@ -74,3 +74,11 @@ class Node():
     def check_win(self):
         """Kiểm tra nếu tất cả hộp đã vào vị trí mục tiêu"""
         return not np.any(self.state == "$")  
+    
+    def get_path(self):
+        path = []
+        node = self
+        while node:
+            path.append(node.state)
+            node = node.parent
+        return path[::-1]

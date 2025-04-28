@@ -19,4 +19,4 @@ def BFS(start_node):
             next.parent = current
             queue.append(next)
 
-    return None
+    return []
