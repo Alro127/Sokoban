@@ -109,6 +109,7 @@ class SokobanSolver:
         start_time = timeit.default_timer()
 
         goal_node = self.algorithm_function(start_node)
+        
 
         end_time = timeit.default_timer()
         memory_used, peak_memory = tracemalloc.get_traced_memory()
@@ -117,18 +118,21 @@ class SokobanSolver:
         print(f"Thời gian thực thi thuật toán: {(end_time - start_time):.5f} giây")
         print(f"Bộ nhớ sử dụng: {memory_used / (1024 ** 2):.5f} MB")
         print(f"Bộ nhớ tối đa: {peak_memory / (1024 ** 2):.5f} MB")
+        
 
         if goal_node is not None:
             clock = pygame.time.Clock()
             path = self.reconstruct_path(start_node, goal_node)
+
+            print(len(path))
 
             prev_state = None
             for node in path:
                 self.draw_map(node.state, prev_state)
                 prev_state = node.state
                 pygame.display.flip()
-                clock.tick(30)
-
+                clock.tick(10)
+            
             running = True
             while running:
                 for event in pygame.event.get():

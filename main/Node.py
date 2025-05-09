@@ -1,12 +1,29 @@
-import numpy as np
+import numpy as np 
 
 class Node():
-    def __init__(self, state, parent=None, move_direction=None, cost=0):
+    def __init__(self, state, parent=None, move_direction=None, depth=0):
         self.state = state
         self.parent = parent
         self.move_direction = move_direction 
-        self.heuristic = 0
-        self.cost = cost
+        self.depth = depth
+
+    def heuristic(self):
+        """Tính heuristic: Tổng khoảng cách Manhattan từ mỗi hộp đến vị trí mục tiêu gần nhất"""
+        # Tìm tất cả vị trí hộp và goal
+        box_positions = list(zip(*np.where((self.state == '$') | (self.state == '*'))))
+        goal_positions = list(zip(*np.where((self.state == '.') | (self.state == '+') | (self.state == '*'))))
+
+        total_distance = 0
+        for box in box_positions:
+            min_dist = float('inf')
+            for goal in goal_positions:
+                dist = abs(box[0] - goal[0]) + abs(box[1] - goal[1])
+                if dist < min_dist:
+                    min_dist = dist
+            total_distance += min_dist
+
+        return total_distance
+
 
     def can_move(self, x, y):
         """Kiểm tra xem người chơi có thể di chuyển vào ô (x, y) không"""
@@ -14,7 +31,7 @@ class Node():
 
     def copy(self):
         """Tạo bản sao của trạng thái"""
-        return Node(self.state.copy(), self.parent, self.move_direction, self.cost)
+        return Node(self.state.copy(), self.parent, self.move_direction, self.depth)
 
     def move(self, player_x, player_y, dx, dy):
         new_x = player_x + dx
@@ -74,11 +91,21 @@ class Node():
     def check_win(self):
         """Kiểm tra nếu tất cả hộp đã vào vị trí mục tiêu"""
         return not np.any(self.state == "$")  
-    
-    def get_path(self):
-        path = []
-        node = self
-        while node:
-            path.append(node.state)
-            node = node.parent
-        return path[::-1]
+
+    def check_deadlock(self):
+        """Kiểm tra deadlock: Nếu hộp bị kẹt và không thể di chuyển đến vị trí mục tiêu"""
+        box_positions = list(zip(*np.where((self.state == '$'))))
+        for box in box_positions:
+            x, y = box
+            # Kiểm tra nếu hộp ở góc mà không phải vị trí mục tiêu
+            if self.state[x, y] == "$":
+                # Kiểm tra các góc chết
+                if self.state[x - 1, y] == "#" and self.state[x, y - 1] == "#":
+                    return True
+                if self.state[x - 1, y] == "#" and self.state[x, y + 1] == "#":
+                    return True
+                if self.state[x + 1, y] == "#" and self.state[x, y - 1] == "#":
+                    return True
+                if self.state[x + 1, y] == "#" and self.state[x, y + 1] == "#":
+                    return True
+        return False

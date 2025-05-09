@@ -3,13 +3,11 @@ import sys
 from SokobanSolver import SokobanSolver
 import Algorithms as agrm
 
-# Cấu hình pygame
 pygame.init()
-WIDTH, HEIGHT = 600, 450
+WIDTH, HEIGHT = 800, 450
 screen = pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 pygame.display.set_caption("Sokoban Menu")
 
-# Load fonts
 try:
     font = pygame.font.SysFont("segoeui", 28)
     header_font = pygame.font.SysFont("segoeui", 48, bold=True)
@@ -17,18 +15,24 @@ except:
     font = pygame.font.SysFont("Arial", 28)
     header_font = pygame.font.SysFont("Arial", 48, bold=True)
 
-# Tùy chọn level và thuật toán
-levels = [f"Level {i}" for i in range(20)]
-algorithms = {"BFS": agrm.BFS, "DFS": agrm.BFS, "A*": agrm.BFS}
+levels = [f"Level {i}" for i in range(3)]
+algorithms = {"BFS": agrm.BFS, 
+              "DFS": agrm.DFS, 
+              "UCS": agrm.UCS,
+              "IDS": agrm.IDS,
+              "Greedy": agrm.Greedy,
+              "A star": agrm.A_star,
+              "IDA star": agrm.IDA_star,
+              "A star advanced": agrm.A_star_advanced,
+              "Backtracking with FC": agrm.backtracking_fc,
+              "Q Learning":  agrm.q_learning}
 
 selected_level = 0
 selected_algorithm_name = "BFS"
 
-# Scroll offset
 level_scroll_offset = 0
 algorithm_scroll_offset = 0
 
-# Các màu sắc hiện đại
 BG_COLOR = (25, 25, 45)
 PANEL_COLOR = (40, 40, 70)
 TEXT_COLOR = (220, 220, 220)
@@ -36,12 +40,10 @@ HIGHLIGHT_COLOR = (100, 200, 250)
 BUTTON_COLOR = (0, 180, 100)
 BUTTON_HOVER = (0, 220, 130)
 
-# Thông số giao diện
 ITEM_HEIGHT = 40
-VISIBLE_ITEMS = 5
+VISIBLE_ITEMS = 4
 SCROLL_SPEED = 1
 
-# Các hàm vẽ giao diện
 def draw_text(surface, text, pos, selected=False):
     color = HIGHLIGHT_COLOR if selected else TEXT_COLOR
     label = font.render(text, True, color)
@@ -57,49 +59,41 @@ def main_menu():
     clock = pygame.time.Clock()
     running = True
 
+    algo_keys = list(algorithms.keys())
+
     while running:
         screen.fill(BG_COLOR)
 
-        # Header
         header = header_font.render("Sokoban Solver", True, (255, 215, 0))
         screen.blit(header, (WIDTH // 2 - header.get_width() // 2, 20))
 
-        # Panels
         level_panel = pygame.Rect(40, 100, 220, 200)
-        algo_panel = pygame.Rect(340, 100, 220, 200)
+        algo_panel = pygame.Rect(340, 100, 440, 200)
 
-        # Tạo surface tạm với alpha
         level_surface = pygame.Surface((level_panel.width, level_panel.height), pygame.SRCALPHA)
         algo_surface = pygame.Surface((algo_panel.width, algo_panel.height), pygame.SRCALPHA)
 
-        # Vẽ panel bo góc lên surface
         draw_rounded_rect(level_surface, PANEL_COLOR, level_surface.get_rect(), radius=15)
         draw_rounded_rect(algo_surface, PANEL_COLOR, algo_surface.get_rect(), radius=15)
 
-        # Vẽ tiêu đề vào surface
         draw_text(level_surface, "Level:", (20, 10))
         draw_text(algo_surface, "Algorithm:", (20, 10))
 
-        # Vẽ levels lên level_surface
         start_idx = level_scroll_offset
         end_idx = min(start_idx + VISIBLE_ITEMS, len(levels))
         for idx, lvl in enumerate(levels[start_idx:end_idx]):
             y_pos = 50 + idx * ITEM_HEIGHT
             draw_text(level_surface, lvl, (40, y_pos), selected=(start_idx + idx == selected_level))
 
-        # Vẽ algorithms lên algo_surface
-        algo_keys = list(algorithms.keys())
         start_idx_a = algorithm_scroll_offset
         end_idx_a = min(start_idx_a + VISIBLE_ITEMS, len(algo_keys))
         for idx, algo in enumerate(algo_keys[start_idx_a:end_idx_a]):
             y_pos = 50 + idx * ITEM_HEIGHT
             draw_text(algo_surface, algo, (40, y_pos), selected=(algo == selected_algorithm_name))
 
-        # Blit surface vào màn hình
         screen.blit(level_surface, (level_panel.x, level_panel.y))
         screen.blit(algo_surface, (algo_panel.x, algo_panel.y))
 
-        # Vẽ nút Start
         start_rect = pygame.Rect(200, 340, 200, 60)
         mouse_pos = pygame.mouse.get_pos()
         if start_rect.collidepoint(mouse_pos):
@@ -120,23 +114,22 @@ def main_menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
 
-                # Kiểm tra chọn level
                 if level_panel.collidepoint(x, y):
                     local_y = y - level_panel.top - 50
-                    idx = local_y // ITEM_HEIGHT
-                    real_idx = level_scroll_offset + idx
-                    if 0 <= idx < VISIBLE_ITEMS and real_idx < len(levels):
-                        selected_level = real_idx
+                    if 0 <= local_y <= VISIBLE_ITEMS * ITEM_HEIGHT:
+                        idx = local_y // ITEM_HEIGHT
+                        real_idx = level_scroll_offset + idx
+                        if real_idx < len(levels):
+                            selected_level = real_idx
 
-                # Kiểm tra chọn thuật toán
                 if algo_panel.collidepoint(x, y):
                     local_y = y - algo_panel.top - 50
-                    idx = local_y // ITEM_HEIGHT
-                    real_idx = algorithm_scroll_offset + idx
-                    if 0 <= idx < VISIBLE_ITEMS and real_idx < len(algo_keys):
-                        selected_algorithm_name = algo_keys[real_idx]
+                    if 0 <= local_y <= VISIBLE_ITEMS * ITEM_HEIGHT:
+                        idx = local_y // ITEM_HEIGHT
+                        real_idx = algorithm_scroll_offset + idx
+                        if real_idx < len(algo_keys):
+                            selected_algorithm_name = algo_keys[real_idx]
 
-                # Kiểm tra click vào nút Start
                 if start_rect.collidepoint(x, y):
                     solver = SokobanSolver(level_index=selected_level, algorithm_function=algorithms[selected_algorithm_name])
                     solver.solve()

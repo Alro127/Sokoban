@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 
 import Levels as lv
-from Player import Player
+# from Player import Player
 import Algorithms as agrm
 from Node import Node
 
