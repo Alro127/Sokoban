@@ -2,7 +2,11 @@ from collections import deque
 import time
 import heapq
 import numpy as np
+import heapq
+from collections import defaultdict
+import time
 from Node import Node
+
 
 def BFS(start_node):
     queue = deque([start_node])
@@ -365,3 +369,117 @@ def q_learning(initial_state):
     ql = QLearning(initial_state, alpha=0.1, gamma=0.9, epsilon=0.1)
     ql.train(episodes=1000)
     return ql.solve()
+
+def beam_search(start_node, beam_width=50, max_depth=500):
+
+    try:
+        start_time = time.time()
+        
+        # Khởi tạo beam với node bắt đầu
+        current_beam = [start_node]
+        visited = set()
+        best_nodes = []  # Lưu các node tốt nhất đã tìm thấy
+        best_heuristic = float('inf')  # Lưu heuristic tốt nhất đã tìm thấy
+        no_improvement_count = 0  # Đếm số lần không cải thiện
+        
+        depth = 0
+        while current_beam and depth < max_depth:
+            if time.time() - start_time > 60:  # Tăng timeout lên 60 giây
+                print("Search timeout reached. Returning best solution found.")
+                break
+                
+            next_beam = []
+            depth += 1
+            
+           
+            
+            # Duyệt qua tất cả các node trong beam hiện tại
+            for current in current_beam:
+                if current.check_win():
+                    
+                    return current
+                    
+                # Lấy tất cả các trạng thái tiếp theo
+                for next_node in current.get_valid_state():
+                    state_tuple = tuple(map(tuple, next_node.state))
+                    if state_tuple in visited:
+                        continue
+                        
+                    # Kiểm tra deadlock
+                    if next_node.check_deadlock():
+                        continue
+                        
+                    visited.add(state_tuple)
+                    next_node.parent = current
+                    next_node.depth = depth
+                    
+                    # Tính f-score = g(n) + h(n) + p(n)
+                    h_score = next_node.heuristic()
+                    g_score = depth
+                    p_score = 0
+                    
+                    # Cập nhật heuristic tốt nhất
+                    if h_score < best_heuristic:
+                        best_heuristic = h_score
+                        no_improvement_count = 0
+                        
+                    else:
+                        no_improvement_count += 1
+                    
+                    # Thêm penalty cho các trạng thái không mong muốn
+                    if h_score > current.heuristic():  # Nếu heuristic xấu đi
+                        p_score = 0.5  # Giảm penalty để cho phép khám phá nhiều hơn
+                    
+                    f_score = g_score + h_score + p_score
+                    heapq.heappush(next_beam, (f_score, id(next_node), next_node))
+                    
+                    # Lưu node tốt nhất
+                    if h_score < best_heuristic + 5:  # Mở rộng điều kiện lưu node tốt
+                        best_nodes.append((h_score, next_node))
+            
+            # Chọn k node tốt nhất cho beam tiếp theo
+            current_beam = []
+            for _ in range(min(beam_width, len(next_beam))):
+                if next_beam:
+                    _, _, node = heapq.heappop(next_beam)
+                    current_beam.append(node)
+            
+            # Nếu không có node nào trong beam tiếp theo hoặc không cải thiện trong thời gian dài
+            if (not current_beam or no_improvement_count > 50) and best_nodes:
+                # Sắp xếp các node tốt nhất theo heuristic
+                best_nodes.sort(key=lambda x: x[0])
+                
+                # Lấy một số node tốt nhất để thử lại
+                num_nodes_to_try = min(10, len(best_nodes))
+                current_beam = [node for _, node in best_nodes[:num_nodes_to_try]]
+                best_nodes = best_nodes[num_nodes_to_try:]  # Giữ lại các node còn lại
+                
+                # Reset counter
+                no_improvement_count = 0
+                
+                # Nếu best_nodes quá lớn, chỉ giữ lại một số node tốt nhất
+                if len(best_nodes) > 100:
+                    best_nodes = best_nodes[:50]
+                continue
+        
+        
+        # Nếu không tìm thấy giải pháp, trả về node tốt nhất đã tìm được
+        if best_nodes:
+            best_nodes.sort(key=lambda x: x[0])
+           
+            return best_nodes[0][1]
+        
+        # Nếu không có node tốt nào, trả về node cuối cùng trong beam
+        if current_beam:
+            return current_beam[0]
+            
+        return None
+        
+    except Exception as e:
+        print(f"Error in beam_search: {str(e)}")
+        # Trả về node tốt nhất đã tìm được nếu có lỗi
+        if best_nodes:
+            best_nodes.sort(key=lambda x: x[0])
+            print(f"Returning best node after error with heuristic: {best_nodes[0][0]}")
+            return best_nodes[0][1]
+        return None

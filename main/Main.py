@@ -25,7 +25,8 @@ algorithms = {"BFS": agrm.BFS,
               "IDA star": agrm.IDA_star,
               "A star advanced": agrm.A_star_advanced,
               "Backtracking with FC": agrm.backtracking_fc,
-              "Q Learning":  agrm.q_learning}
+              "Q Learning":  agrm.q_learning,
+              "Beam Search": agrm.beam_search}
 
 selected_level = 0
 selected_algorithm_name = "BFS"
@@ -67,8 +68,8 @@ def main_menu():
         header = header_font.render("Sokoban Solver", True, (255, 215, 0))
         screen.blit(header, (WIDTH // 2 - header.get_width() // 2, 20))
 
-        level_panel = pygame.Rect(40, 100, 220, 200)
-        algo_panel = pygame.Rect(340, 100, 440, 200)
+        level_panel = pygame.Rect(40, 100, 220, 240)
+        algo_panel = pygame.Rect(340, 100, 440, 240)
 
         level_surface = pygame.Surface((level_panel.width, level_panel.height), pygame.SRCALPHA)
         algo_surface = pygame.Surface((algo_panel.width, algo_panel.height), pygame.SRCALPHA)
@@ -94,7 +95,7 @@ def main_menu():
         screen.blit(level_surface, (level_panel.x, level_panel.y))
         screen.blit(algo_surface, (algo_panel.x, algo_panel.y))
 
-        start_rect = pygame.Rect(200, 340, 200, 60)
+        start_rect = pygame.Rect(200, 380, 200, 60)
         mouse_pos = pygame.mouse.get_pos()
         if start_rect.collidepoint(mouse_pos):
             draw_rounded_rect(screen, BUTTON_HOVER, start_rect)
@@ -133,6 +134,7 @@ def main_menu():
                 if start_rect.collidepoint(x, y):
                     solver = SokobanSolver(level_index=selected_level, algorithm_function=algorithms[selected_algorithm_name])
                     solver.solve()
+                    pygame.display.set_mode((WIDTH, HEIGHT), pygame.RESIZABLE)
 
             if event.type == pygame.MOUSEWHEEL:
                 if level_panel.collidepoint(pygame.mouse.get_pos()):
