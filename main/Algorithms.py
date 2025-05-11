@@ -370,7 +370,7 @@ def q_learning(initial_state):
     ql.train(episodes=1000)
     return ql.solve()
 
-def beam_search(start_node, beam_width=50, max_depth=500):
+def beam_search(start_node, beam_width=30, max_depth=500):
 
     try:
         start_time = time.time()
@@ -390,9 +390,7 @@ def beam_search(start_node, beam_width=50, max_depth=500):
                 
             next_beam = []
             depth += 1
-            
-           
-            
+        
             # Duyệt qua tất cả các node trong beam hiện tại
             for current in current_beam:
                 if current.check_win():
