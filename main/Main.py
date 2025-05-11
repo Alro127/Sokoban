@@ -15,7 +15,7 @@ except:
     font = pygame.font.SysFont("Arial", 28)
     header_font = pygame.font.SysFont("Arial", 48, bold=True)
 
-levels = [f"Level {i}" for i in range(3)]
+levels = ["Dễ", "Khó"]
 algorithms = {"BFS": agrm.BFS, 
               "DFS": agrm.DFS, 
               "UCS": agrm.UCS,
@@ -96,6 +96,7 @@ def main_menu():
         screen.blit(algo_surface, (algo_panel.x, algo_panel.y))
 
         start_rect = pygame.Rect(200, 380, 200, 60)
+        start_rect = pygame.Rect(WIDTH // 2 - 100, 380, 200, 60)
         mouse_pos = pygame.mouse.get_pos()
         if start_rect.collidepoint(mouse_pos):
             draw_rounded_rect(screen, BUTTON_HOVER, start_rect)

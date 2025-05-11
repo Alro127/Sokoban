@@ -24,7 +24,6 @@ class Node():
 
         return total_distance
 
-
     def can_move(self, x, y):
         """Kiểm tra xem người chơi có thể di chuyển vào ô (x, y) không"""
         return str(self.state[x, y]) in (" ", ".") 
