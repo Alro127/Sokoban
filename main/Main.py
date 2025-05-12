@@ -23,7 +23,7 @@ algorithms = {"BFS": agrm.BFS,
               "Greedy": agrm.Greedy,
               "A star": agrm.A_star,
               "IDA star": agrm.IDA_star,
-              "A star advanced": agrm.A_star_advanced,
+              "Partially Observable Search": agrm.a_star_partially_observable,
               "Backtracking with FC": agrm.backtracking_fc,
               "Q Learning":  agrm.q_learning,
               "Beam Search": agrm.beam_search}

@@ -108,3 +108,6 @@ class Node():
                 if self.state[x + 1, y] == "#" and self.state[x, y + 1] == "#":
                     return True
         return False
+    
+    def __lt__(self, other):
+            return self.heuristic() < other.heuristic()
