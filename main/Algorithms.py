@@ -475,10 +475,10 @@ def beam_search(start_node, beam_width=10, max_depth=500):
     return None
 
 
-def generate_belief_states(initial_state, num_beliefs=1):
+def generate_belief_states(state, num_beliefs=3):
     beliefs = []
     for _ in range(num_beliefs):
-        new_state = initial_state.copy()
+        new_state = state.copy()
         positions = [(i, j) for i in range(len(new_state)) for j in range(len(new_state[0])) if new_state[i][j] in (' ', '$')]
         if len(positions) >= 2:
             idx1, idx2 = np.random.choice(len(positions), 2, replace=False)
@@ -488,17 +488,21 @@ def generate_belief_states(initial_state, num_beliefs=1):
     return beliefs
 
 
+def update_belief_states(beliefs, new_state, max_beliefs=5):
+    # Cập nhật niềm tin bằng cách thêm trạng thái mới và giới hạn số belief states
+    new_beliefs = generate_belief_states(new_state)
+    beliefs.extend(new_beliefs)
+    beliefs = sorted(beliefs, key=lambda node: node.heuristic())[:max_beliefs]
+    return beliefs
+
+
 def a_star_partially_observable(start_node):
     heap = []
     visited = set()
-
     start_node.depth = 0
-    heapq.heappush(heap, (start_node.depth + start_node.heuristic(), id(start_node), start_node))
 
-    # Khởi tạo belief states từ start_node
+    heapq.heappush(heap, (start_node.depth + start_node.heuristic(), id(start_node), start_node))
     beliefs = generate_belief_states(start_node.state)
-    for node in beliefs:
-        heapq.heappush(heap, (node.depth + node.heuristic(), id(node), node))
 
     while heap:
         _, _, current = heapq.heappop(heap)
@@ -519,8 +523,7 @@ def a_star_partially_observable(start_node):
             next_node.parent = current
 
             # Cập nhật belief states dựa trên hành động
-            new_beliefs = generate_belief_states(next_node.state)
-            beliefs.extend(new_beliefs)
+            beliefs = update_belief_states(beliefs, next_node.state)
 
             f_score = next_node.depth + next_node.heuristic()
             heapq.heappush(heap, (f_score, id(next_node), next_node))
