@@ -475,24 +475,45 @@ def beam_search(start_node, beam_width=10, max_depth=500):
     return None
 
 
-def generate_belief_states(state, num_beliefs=3):
+def observe(node, radius):
+    observed_positions = []
+    player_pos = np.argwhere((node.state == '@') | (node.state == '+'))
+    if len(player_pos) == 0:
+        return observed_positions
+
+    px, py = player_pos[0]
+    state = node.state
+    rows, cols = state.shape
+
+    for i in range(max(0, px - radius), min(rows, px + radius + 1)):
+        for j in range(max(0, py - radius), min(cols, py + radius + 1)):
+            observed_positions.append((i, j))
+
+    return observed_positions
+
+
+def generate_belief_states(node, num_beliefs=3, radius=2):
     beliefs = []
+    observed_positions = observe(node, radius)
+
     for _ in range(num_beliefs):
-        new_state = state.copy()
-        positions = [(i, j) for i in range(len(new_state)) for j in range(len(new_state[0])) if new_state[i][j] in (' ', '$')]
+        new_node = node.copy()
+        positions = [(i, j) for i in range(len(new_node.state)) for j in range(len(new_node.state[0])) if (i, j) not in observed_positions and new_node.state[i][j] in (' ', '$')]
+
         if len(positions) >= 2:
             idx1, idx2 = np.random.choice(len(positions), 2, replace=False)
             pos1, pos2 = positions[idx1], positions[idx2]
-            new_state[pos1], new_state[pos2] = new_state[pos2], new_state[pos1]
-        beliefs.append(Node(new_state))
+            new_node.state[pos1], new_node.state[pos2] = new_node.state[pos2], new_node.state[pos1]
+
+        beliefs.append(new_node)
+
     return beliefs
 
 
-def update_belief_states(beliefs, new_state, max_beliefs=5):
-    # Cập nhật niềm tin bằng cách thêm trạng thái mới và giới hạn số belief states
-    new_beliefs = generate_belief_states(new_state)
+def update_belief_states(beliefs, new_node, radius=2):
+    new_beliefs = generate_belief_states(new_node, num_beliefs=1, radius=radius)
     beliefs.extend(new_beliefs)
-    beliefs = sorted(beliefs, key=lambda node: node.heuristic())[:max_beliefs]
+
     return beliefs
 
 
@@ -502,13 +523,20 @@ def a_star_partially_observable(start_node):
     start_node.depth = 0
 
     heapq.heappush(heap, (start_node.depth + start_node.heuristic(), id(start_node), start_node))
-    beliefs = generate_belief_states(start_node.state)
+    beliefs = generate_belief_states(start_node)
+
+    # Thêm các beliefs ban đầu vào heap
+    for belief_node in beliefs:
+        belief_tuple = tuple(map(tuple, belief_node.state))
+        if belief_tuple not in visited:
+            heapq.heappush(heap, (belief_node.depth + belief_node.heuristic(), id(belief_node), belief_node))
 
     while heap:
         _, _, current = heapq.heappop(heap)
 
-        if any(node.check_win() for node in beliefs):
-            return current
+        for node in beliefs:
+            if (node.check_win()):
+                return node
 
         state_tuple = tuple(map(tuple, current.state))
         if state_tuple in visited:
@@ -523,9 +551,18 @@ def a_star_partially_observable(start_node):
             next_node.parent = current
 
             # Cập nhật belief states dựa trên hành động
-            beliefs = update_belief_states(beliefs, next_node.state)
+            beliefs = update_belief_states(beliefs, next_node)
 
             f_score = next_node.depth + next_node.heuristic()
             heapq.heappush(heap, (f_score, id(next_node), next_node))
+
+            # Thêm các belief states vào heap
+            for belief_node in beliefs:
+                belief_tuple = tuple(map(tuple, belief_node.state))
+                if belief_tuple not in visited:
+                    belief_node.depth = next_node.depth
+                    heapq.heappush(heap, (belief_node.depth + belief_node.heuristic(), id(belief_node), belief_node))
+
+            
 
     return None
