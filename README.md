@@ -68,11 +68,11 @@ Các hàm sử dụng
 
 Hình ảnh giao diện chọn độ khó và thuật toán giải quyết
 
-    ![alt text](images/image.png)
+![alt text](images/image.png)
 
 Hình ảnh giao diện khởi chạy quá trình giải bài toán với độ khó và thuật toán được chọn
 
-    ![alt text](images/image-1.png)
+![alt text](images/image-1.png)
 
 ## Các thuật toán áp dụng
 
