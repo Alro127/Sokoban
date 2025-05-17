@@ -67,20 +67,22 @@ Các hàm sử dụng
 ## Giao diện
 
 Hình ảnh giao diện chọn độ khó và thuật toán giải quyết
+
 ![alt text](images/image.png)
 
 Hình ảnh giao diện khởi chạy quá trình giải bài toán với độ khó và thuật toán được chọn
+
 ![alt text](images/image-1.png)
 
 ## Các thuật toán áp dụng
 
 ### BFS
 
-#### Perform
+- #### Perform
 
 ![BFS Animation](images/BFS.gif)
 
-#### Evaluation
+- #### Evaluation
 
 - **Thời gian thực thi:** 1.86538 giây  
 - **Bộ nhớ sử dụng:** 0.27269 MB  
@@ -89,11 +91,11 @@ Hình ảnh giao diện khởi chạy quá trình giải bài toán với độ 
 
 ### A*
 
-#### Perform
+- #### Perform
 
 ![A* Animation](images/A_Star.gif)
 
-#### Evaluation
+- #### Evaluation
 
 - **Thời gian thực thi:** 2.54496 giây  
 - **Bộ nhớ sử dụng:** 0.28536 MB  
@@ -102,11 +104,11 @@ Hình ảnh giao diện khởi chạy quá trình giải bài toán với độ 
 
 ### Beam Search
 
-#### Perform
+- - #### Perform
 
 ![Beam Search Animation](images/BeamSearch.gif)
 
-#### Evaluation
+- - #### Evaluation
 
 - **Thời gian thực thi:** 0.49600 giây  
 - **Bộ nhớ sử dụng:** 0.32198 MB  
@@ -115,11 +117,11 @@ Hình ảnh giao diện khởi chạy quá trình giải bài toán với độ 
 
 ### Search with Partially Observable
 
-#### Perform
+- #### Perform
 
 ![Search with Partially Observable Animation](images/SearchwithPartiallyObservable.gif)
 
-#### Evaluation
+- #### Evaluation
 
 - **Thời gian thực thi:** 3.70564 giây  
 - **Bộ nhớ sử dụng:** 0.35836 MB  
@@ -128,11 +130,11 @@ Hình ảnh giao diện khởi chạy quá trình giải bài toán với độ 
 
 ### Backtracking with Forward Checking
 
-#### Perform
+- #### Perform
 
 ![Backtracking with Forward Checking Animation](images/BackTracking.gif)
 
-#### Evaluation
+- #### Evaluation
 
 - **Thời gian thực thi:** 1.39077 giây  
 - **Bộ nhớ sử dụng:** 0.50920 MB  
@@ -141,11 +143,11 @@ Hình ảnh giao diện khởi chạy quá trình giải bài toán với độ 
 
 ### Q-Learning
 
-#### Perform
+- #### Perform
 
 ![Q-Learning Animation](images/QLearning.gif)
 
-#### Evaluation
+- #### Evaluation
 
 - **Thời gian thực thi:** 109.09365 giây  
 - **Bộ nhớ sử dụng:** 0.09008 MB  
