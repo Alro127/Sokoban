@@ -52,7 +52,7 @@ Trạng thái của trò chơi được mô hình hóa dưới dạng ma trận 
 | `*`    | Hộp trên đích        |
 | `+`    | Người chơi trên đích |
 
-## Các hàm sử dụng
+Các hàm sử dụng
 
 - **Heuristic:** Tổng khoảng cách Manhattan từ mỗi hộp đến vị trí mục tiêu gần nhất.
 - **Can_Move(x, y):** Kiểm tra xem người chơi có thể di chuyển vào ô (x, y) không.
@@ -63,6 +63,14 @@ Trạng thái của trò chơi được mô hình hóa dưới dạng ma trận 
 - **Check_Deadlock:** Kiểm tra deadlock – khi hộp bị kẹt và không di chuyển đến vị trí mục tiêu.
 
 ---
+
+## Giao diện
+
+Hình ảnh giao diện chọn độ khó và thuật toán giải quyết
+![alt text](images/image.png)
+
+Hình ảnh giao diện khởi chạy quá trình giải bài toán với độ khó và thuật toán được chọn
+![alt text](images/image-1.png)
 
 ## Các thuật toán áp dụng
 
