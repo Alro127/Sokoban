@@ -110,10 +110,10 @@ Hình ảnh giao diện khởi chạy quá trình giải bài toán với độ 
 
 #### Evaluation
 
-    - **Thời gian thực thi:** 0.49600 giây  
-    - **Bộ nhớ sử dụng:** 0.32198 MB  
-    - **Bộ nhớ tối đa:** 4.90529 MB  
-    - **Số bước thực hiện:** 175  
+- **Thời gian thực thi:** 0.49600 giây  
+- **Bộ nhớ sử dụng:** 0.32198 MB  
+- **Bộ nhớ tối đa:** 4.90529 MB  
+- **Số bước thực hiện:** 175  
 
 ### Search with Partially Observable
 
@@ -123,10 +123,10 @@ Hình ảnh giao diện khởi chạy quá trình giải bài toán với độ 
 
 #### Evaluation
 
-    - **Thời gian thực thi:** 3.70564 giây  
-    - **Bộ nhớ sử dụng:** 0.35836 MB  
-    - **Bộ nhớ tối đa:** 1.89885 MB  
-    - **Số bước thực hiện:** 31  
+- **Thời gian thực thi:** 3.70564 giây  
+- **Bộ nhớ sử dụng:** 0.35836 MB  
+- **Bộ nhớ tối đa:** 1.89885 MB  
+- **Số bước thực hiện:** 31  
 
 ### Backtracking with Forward Checking
 
@@ -136,10 +136,10 @@ Hình ảnh giao diện khởi chạy quá trình giải bài toán với độ 
 
 #### Evaluation
 
-    - **Thời gian thực thi:** 1.39077 giây  
-    - **Bộ nhớ sử dụng:** 0.50920 MB  
-    - **Bộ nhớ tối đa:** 6.53839 MB  
-    - **Số bước thực hiện:** 405  
+- **Thời gian thực thi:** 1.39077 giây  
+- **Bộ nhớ sử dụng:** 0.50920 MB  
+- **Bộ nhớ tối đa:** 6.53839 MB  
+- **Số bước thực hiện:** 405  
 
 ### Q-Learning
 
@@ -149,7 +149,7 @@ Hình ảnh giao diện khởi chạy quá trình giải bài toán với độ 
 
 #### Evaluation
 
-    - **Thời gian thực thi:** 109.09365 giây  
-    - **Bộ nhớ sử dụng:** 0.09008 MB  
-    - **Bộ nhớ tối đa:** 0.22181 MB  
-    - **Số bước thực hiện:** 88  
+- **Thời gian thực thi:** 109.09365 giây  
+- **Bộ nhớ sử dụng:** 0.09008 MB  
+- **Bộ nhớ tối đa:** 0.22181 MB  
+- **Số bước thực hiện:** 88  
