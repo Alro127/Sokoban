@@ -78,11 +78,11 @@ Hình ảnh giao diện khởi chạy quá trình giải bài toán với độ 
 
 ### BFS
 
-- #### Perform
+#### Perform
 
-    ![BFS Animation](images/BFS.gif)
+![BFS Animation](images/BFS.gif)
 
-- #### Evaluation
+#### Evaluation
 
 - **Thời gian thực thi:** 1.86538 giây  
 - **Bộ nhớ sử dụng:** 0.27269 MB  
